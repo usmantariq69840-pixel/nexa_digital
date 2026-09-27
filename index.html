@@ -6,41 +6,99 @@
 
     <meta name="description"
           content="Nexa Digital - Modern digital agency providing web development, UI/UX design, SEO and digital marketing services.">
+    <meta name="theme-color" content="#2563eb">
 
     <title>Nexa Digital | Digital Agency</title>
+
+    <!-- Apply the saved theme before first paint to avoid a flash -->
+    <script>
+        (function () {
+            var theme = null;
+            try { theme = localStorage.getItem("theme"); } catch (e) {}
+            if (!theme) {
+                theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+            }
+            document.documentElement.setAttribute("data-theme", theme);
+            document.documentElement.classList.add("js");
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop stop-color='%232563eb'/><stop offset='1' stop-color='%237c3aed'/></linearGradient></defs><rect width='32' height='32' rx='8' fill='url(%23g)'/><path d='M10 22V10l12 12V10' stroke='white' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>">
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
+    <!-- ================= ICON SPRITE ================= -->
+    <svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="i-code" viewBox="0 0 24 24"><path d="m16 18 6-6-6-6"/><path d="m8 6-6 6 6 6"/></symbol>
+        <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/><path d="M11 8v6"/></symbol>
+        <symbol id="i-megaphone" viewBox="0 0 24 24"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></symbol>
+        <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 2 10 5-10 5L2 7l10-5z"/><path d="m2 17 10 5 10-5"/><path d="m2 12 10 5 10-5"/></symbol>
+        <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z"/></symbol>
+        <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+        <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></symbol>
+        <symbol id="i-arrow-up" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></symbol>
+        <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></symbol>
+        <symbol id="i-moon" viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z"/></symbol>
+        <symbol id="i-mail" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></symbol>
+        <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+        <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+        <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8"/></symbol>
+        <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3"/></symbol>
+        <symbol id="i-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+        <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></symbol>
+        <symbol id="i-trend" viewBox="0 0 24 24"><path d="m22 7-8.5 8.5-5-5L2 17"/><path d="M16 7h6v6"/></symbol>
+        <symbol id="i-star" viewBox="0 0 24 24"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></symbol>
+        <symbol id="i-facebook" viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></symbol>
+        <symbol id="i-instagram" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><path d="M17.5 6.5h.01"/></symbol>
+        <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></symbol>
+        <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+    </svg>
+
+
     <!-- ================= HEADER ================= -->
-    <header class="header">
+    <header class="header" id="header">
 
-        <nav class="navbar container">
+        <nav class="navbar container" aria-label="Main navigation">
 
-            <a href="#home" class="logo">
-                <span>Nexa</span> Digital
+            <a href="#home" class="logo" aria-label="Nexa Digital home">
+                <span class="logo-mark" aria-hidden="true">N</span>
+                <span class="logo-text"><span>Nexa</span> Digital</span>
             </a>
 
             <div class="nav-menu" id="navMenu">
 
-                <a href="#home" class="nav-link">Home</a>
+                <a href="#home" class="nav-link active">Home</a>
                 <a href="#about" class="nav-link">About</a>
                 <a href="#services" class="nav-link">Services</a>
                 <a href="#portfolio" class="nav-link">Portfolio</a>
                 <a href="#contact" class="nav-link">Contact</a>
 
+                <a href="#contact" class="btn btn-primary btn-sm nav-cta-mobile">Start a Project</a>
+
             </div>
 
             <div class="nav-actions">
 
-                <button id="themeBtn" class="icon-btn" aria-label="Toggle theme">
-                    🌙
+                <button id="themeBtn" class="icon-btn theme-btn" aria-label="Switch to dark mode">
+                    <svg class="icon icon-moon"><use href="#i-moon"/></svg>
+                    <svg class="icon icon-sun"><use href="#i-sun"/></svg>
                 </button>
 
-                <button id="menuBtn" class="menu-btn" aria-label="Open menu">
-                    ☰
+                <a href="#contact" class="btn btn-primary btn-sm nav-cta">Let's Talk</a>
+
+                <button id="menuBtn" class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="navMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
                 </button>
 
             </div>
@@ -56,39 +114,128 @@
         <!-- ================= HERO ================= -->
         <section class="hero" id="home">
 
-            <div class="hero-overlay"></div>
+            <div class="hero-bg" aria-hidden="true">
+                <div class="blob blob-1"></div>
+                <div class="blob blob-2"></div>
+                <div class="grid-pattern"></div>
+            </div>
 
             <div class="container hero-content">
 
                 <div class="hero-text">
 
-                    <p class="hero-subtitle">
-                        DIGITAL INNOVATION AGENCY
+                    <p class="badge reveal">
+                        <span class="badge-dot"></span>
+                        Digital Innovation Agency
                     </p>
 
-                    <h1>
+                    <h1 class="reveal">
                         We Build Digital
-                        <span>Experiences</span>
+                        <span class="gradient-text">Experiences</span>
                         That Matter
                     </h1>
 
-                    <p class="hero-description">
+                    <p class="hero-description reveal">
                         We create modern websites, user-friendly interfaces
                         and digital solutions that help businesses grow.
                     </p>
 
-                    <div class="hero-buttons">
+                    <div class="hero-buttons reveal">
 
-                        <a href="#contact" class="btn btn-primary">
+                        <a href="#contact" class="btn btn-primary btn-lg">
                             Get Started
+                            <svg class="icon"><use href="#i-arrow"/></svg>
                         </a>
 
-                        <a href="#services" class="btn btn-outline">
+                        <a href="#services" class="btn btn-ghost btn-lg">
                             Our Services
                         </a>
 
                     </div>
 
+                    <div class="hero-proof reveal">
+
+                        <div class="avatars" aria-hidden="true">
+                            <span style="--c:#2563eb">AK</span>
+                            <span style="--c:#7c3aed">SR</span>
+                            <span style="--c:#0891b2">MJ</span>
+                            <span style="--c:#db2777">+</span>
+                        </div>
+
+                        <div>
+                            <div class="stars" aria-label="Rated 4.9 out of 5">
+                                <svg class="icon"><use href="#i-star"/></svg>
+                                <svg class="icon"><use href="#i-star"/></svg>
+                                <svg class="icon"><use href="#i-star"/></svg>
+                                <svg class="icon"><use href="#i-star"/></svg>
+                                <svg class="icon"><use href="#i-star"/></svg>
+                                <strong>4.9</strong>
+                            </div>
+                            <small>Trusted by 80+ growing businesses</small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hero-visual reveal" aria-hidden="true">
+
+                    <div class="hero-image"></div>
+
+                    <div class="float-card float-card-1">
+                        <div class="float-icon"><svg class="icon"><use href="#i-trend"/></svg></div>
+                        <div>
+                            <strong>+240%</strong>
+                            <small>Organic traffic</small>
+                        </div>
+                    </div>
+
+                    <div class="float-card float-card-2">
+                        <div class="float-icon green"><svg class="icon"><use href="#i-check"/></svg></div>
+                        <div>
+                            <strong>150+</strong>
+                            <small>Projects delivered</small>
+                        </div>
+                    </div>
+
+                    <div class="float-card float-card-3">
+                        <small>Conversion rate</small>
+                        <div class="mini-bars">
+                            <span style="--h:35%"></span>
+                            <span style="--h:50%"></span>
+                            <span style="--h:42%"></span>
+                            <span style="--h:68%"></span>
+                            <span style="--h:60%"></span>
+                            <span style="--h:88%"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Trusted by -->
+            <div class="container clients reveal">
+
+                <p>Trusted by teams at</p>
+
+                <div class="marquee">
+                    <div class="marquee-track">
+                        <span>Northwind</span>
+                        <span>Lumina</span>
+                        <span>Quantix</span>
+                        <span>Arcadia</span>
+                        <span>Vertex</span>
+                        <span>Bluepeak</span>
+                        <span aria-hidden="true">Northwind</span>
+                        <span aria-hidden="true">Lumina</span>
+                        <span aria-hidden="true">Quantix</span>
+                        <span aria-hidden="true">Arcadia</span>
+                        <span aria-hidden="true">Vertex</span>
+                        <span aria-hidden="true">Bluepeak</span>
+                    </div>
                 </div>
 
             </div>
@@ -101,31 +248,15 @@
 
             <div class="container">
 
-                <div class="section-heading">
-
-                    <p class="section-label">ABOUT US</p>
-
-                    <h2>
-                        Turning Ideas Into
-                        <span>Digital Solutions</span>
-                    </h2>
-
-                    <p>
-                        Nexa Digital is a creative digital agency focused
-                        on building modern, responsive and user-friendly
-                        digital experiences.
-                    </p>
-
-                </div>
-
-
                 <div class="about-grid">
 
-                    <div class="about-image">
+                    <div class="about-image reveal">
+
+                        <div class="about-photo"></div>
 
                         <div class="about-card">
                             <strong>5+</strong>
-                            <span>Years Experience</span>
+                            <span>Years of<br>Experience</span>
                         </div>
 
                     </div>
@@ -133,46 +264,77 @@
 
                     <div class="about-content">
 
-                        <h3>
-                            We help businesses grow online
-                        </h3>
+                        <p class="section-label reveal">About Us</p>
 
-                        <p>
+                        <h2 class="reveal">
+                            Turning Ideas Into
+                            <span class="gradient-text">Digital Solutions</span>
+                        </h2>
+
+                        <p class="lead reveal">
+                            Nexa Digital is a creative digital agency focused
+                            on building modern, responsive and user-friendly
+                            digital experiences.
+                        </p>
+
+                        <p class="reveal">
                             Our team combines design, technology and strategy
                             to create digital products that are both beautiful
-                            and functional.
-                        </p>
-
-                        <p>
-                            From websites and UI/UX design to SEO and digital
-                            marketing, we provide complete digital solutions.
+                            and functional. From websites and UI/UX design to SEO
+                            and digital marketing, we provide complete digital solutions.
                         </p>
 
 
-                        <div class="about-features">
+                        <ul class="about-features reveal">
 
-                            <div class="feature">
-                                <span>✓</span>
-                                <p>Modern & Responsive Design</p>
-                            </div>
+                            <li class="feature">
+                                <span><svg class="icon"><use href="#i-check"/></svg></span>
+                                Modern &amp; Responsive Design
+                            </li>
 
-                            <div class="feature">
-                                <span>✓</span>
-                                <p>User-Focused Experiences</p>
-                            </div>
+                            <li class="feature">
+                                <span><svg class="icon"><use href="#i-check"/></svg></span>
+                                User-Focused Experiences
+                            </li>
 
-                            <div class="feature">
-                                <span>✓</span>
-                                <p>Professional Development</p>
-                            </div>
+                            <li class="feature">
+                                <span><svg class="icon"><use href="#i-check"/></svg></span>
+                                Professional Development
+                            </li>
 
-                            <div class="feature">
-                                <span>✓</span>
-                                <p>Result-Oriented Strategy</p>
-                            </div>
+                            <li class="feature">
+                                <span><svg class="icon"><use href="#i-check"/></svg></span>
+                                Result-Oriented Strategy
+                            </li>
 
-                        </div>
+                        </ul>
 
+                    </div>
+
+                </div>
+
+
+                <!-- Stats -->
+                <div class="stats reveal">
+
+                    <div class="stat">
+                        <strong><span class="counter" data-target="150">0</span>+</strong>
+                        <span>Projects Completed</span>
+                    </div>
+
+                    <div class="stat">
+                        <strong><span class="counter" data-target="80">0</span>+</strong>
+                        <span>Happy Clients</span>
+                    </div>
+
+                    <div class="stat">
+                        <strong><span class="counter" data-target="12">0</span></strong>
+                        <span>Team Experts</span>
+                    </div>
+
+                    <div class="stat">
+                        <strong><span class="counter" data-target="98">0</span>%</strong>
+                        <span>Client Satisfaction</span>
                     </div>
 
                 </div>
@@ -189,13 +351,13 @@
 
                 <div class="section-heading center">
 
-                    <p class="section-label">OUR SERVICES</p>
+                    <p class="section-label reveal">Our Services</p>
 
-                    <h2>
-                        What We <span>Do</span>
+                    <h2 class="reveal">
+                        What We <span class="gradient-text">Do</span>
                     </h2>
 
-                    <p>
+                    <p class="reveal">
                         Powerful digital services designed to help your
                         business succeed.
                     </p>
@@ -206,10 +368,10 @@
                 <div class="services-grid">
 
                     <!-- Service 1 -->
-                    <article class="service-card">
+                    <article class="service-card reveal">
 
                         <div class="service-icon">
-                            &lt;/&gt;
+                            <svg class="icon"><use href="#i-code"/></svg>
                         </div>
 
                         <h3>Web Development</h3>
@@ -219,20 +381,19 @@
                             according to your business requirements.
                         </p>
 
-                        <button
-                            class="learn-more"
-                            data-service="web">
-                            Learn More →
+                        <button class="learn-more" data-service="web">
+                            Learn More
+                            <svg class="icon"><use href="#i-arrow"/></svg>
                         </button>
 
                     </article>
 
 
                     <!-- Service 2 -->
-                    <article class="service-card">
+                    <article class="service-card reveal">
 
                         <div class="service-icon">
-                            ◈
+                            <svg class="icon"><use href="#i-pen"/></svg>
                         </div>
 
                         <h3>UI/UX Design</h3>
@@ -242,20 +403,19 @@
                             to provide excellent user experiences.
                         </p>
 
-                        <button
-                            class="learn-more"
-                            data-service="uiux">
-                            Learn More →
+                        <button class="learn-more" data-service="uiux">
+                            Learn More
+                            <svg class="icon"><use href="#i-arrow"/></svg>
                         </button>
 
                     </article>
 
 
                     <!-- Service 3 -->
-                    <article class="service-card">
+                    <article class="service-card reveal">
 
                         <div class="service-icon">
-                            SEO
+                            <svg class="icon"><use href="#i-search"/></svg>
                         </div>
 
                         <h3>SEO</h3>
@@ -265,20 +425,19 @@
                             improve your online visibility.
                         </p>
 
-                        <button
-                            class="learn-more"
-                            data-service="seo">
-                            Learn More →
+                        <button class="learn-more" data-service="seo">
+                            Learn More
+                            <svg class="icon"><use href="#i-arrow"/></svg>
                         </button>
 
                     </article>
 
 
                     <!-- Service 4 -->
-                    <article class="service-card">
+                    <article class="service-card reveal">
 
                         <div class="service-icon">
-                            ↗
+                            <svg class="icon"><use href="#i-megaphone"/></svg>
                         </div>
 
                         <h3>Digital Marketing</h3>
@@ -288,20 +447,19 @@
                             reach your target audience.
                         </p>
 
-                        <button
-                            class="learn-more"
-                            data-service="marketing">
-                            Learn More →
+                        <button class="learn-more" data-service="marketing">
+                            Learn More
+                            <svg class="icon"><use href="#i-arrow"/></svg>
                         </button>
 
                     </article>
 
 
                     <!-- Service 5 -->
-                    <article class="service-card">
+                    <article class="service-card reveal">
 
                         <div class="service-icon">
-                            { }
+                            <svg class="icon"><use href="#i-layers"/></svg>
                         </div>
 
                         <h3>Software Development</h3>
@@ -311,20 +469,19 @@
                             business needs and workflows.
                         </p>
 
-                        <button
-                            class="learn-more"
-                            data-service="software">
-                            Learn More →
+                        <button class="learn-more" data-service="software">
+                            Learn More
+                            <svg class="icon"><use href="#i-arrow"/></svg>
                         </button>
 
                     </article>
 
 
                     <!-- Service 6 -->
-                    <article class="service-card">
+                    <article class="service-card reveal">
 
                         <div class="service-icon">
-                            ☁
+                            <svg class="icon"><use href="#i-cloud"/></svg>
                         </div>
 
                         <h3>Cloud Solutions</h3>
@@ -334,10 +491,9 @@
                             modern businesses.
                         </p>
 
-                        <button
-                            class="learn-more"
-                            data-service="cloud">
-                            Learn More →
+                        <button class="learn-more" data-service="cloud">
+                            Learn More
+                            <svg class="icon"><use href="#i-arrow"/></svg>
                         </button>
 
                     </article>
@@ -356,19 +512,27 @@
 
                 <div class="section-heading center">
 
-                    <p class="section-label">WHY CHOOSE US</p>
+                    <p class="section-label reveal">Why Choose Us</p>
 
-                    <h2>
-                        Built For <span>Results</span>
+                    <h2 class="reveal">
+                        Built For <span class="gradient-text">Results</span>
                     </h2>
+
+                    <p class="reveal">
+                        A simple, transparent process and a team that
+                        cares about your goals as much as you do.
+                    </p>
 
                 </div>
 
 
                 <div class="why-grid">
 
-                    <div class="why-card">
-                        <strong>01</strong>
+                    <div class="why-card reveal">
+                        <div class="why-top">
+                            <div class="why-icon"><svg class="icon"><use href="#i-spark"/></svg></div>
+                            <strong>01</strong>
+                        </div>
                         <h3>Creative Approach</h3>
                         <p>
                             We combine creativity with technology to
@@ -376,8 +540,11 @@
                         </p>
                     </div>
 
-                    <div class="why-card">
-                        <strong>02</strong>
+                    <div class="why-card reveal">
+                        <div class="why-top">
+                            <div class="why-icon"><svg class="icon"><use href="#i-cpu"/></svg></div>
+                            <strong>02</strong>
+                        </div>
                         <h3>Modern Technology</h3>
                         <p>
                             We use modern tools and development practices
@@ -385,8 +552,11 @@
                         </p>
                     </div>
 
-                    <div class="why-card">
-                        <strong>03</strong>
+                    <div class="why-card reveal">
+                        <div class="why-top">
+                            <div class="why-icon"><svg class="icon"><use href="#i-user"/></svg></div>
+                            <strong>03</strong>
+                        </div>
                         <h3>User Focused</h3>
                         <p>
                             Every design decision is made with the user
@@ -394,8 +564,11 @@
                         </p>
                     </div>
 
-                    <div class="why-card">
-                        <strong>04</strong>
+                    <div class="why-card reveal">
+                        <div class="why-top">
+                            <div class="why-icon"><svg class="icon"><use href="#i-shield"/></svg></div>
+                            <strong>04</strong>
+                        </div>
                         <h3>Reliable Support</h3>
                         <p>
                             We provide support and guidance throughout
@@ -417,41 +590,27 @@
 
                 <div class="section-heading center">
 
-                    <p class="section-label">OUR WORK</p>
+                    <p class="section-label reveal">Our Work</p>
 
-                    <h2>
-                        Recent <span>Projects</span>
+                    <h2 class="reveal">
+                        Recent <span class="gradient-text">Projects</span>
                     </h2>
+
+                    <p class="reveal">
+                        A selection of work we're proud of, across web,
+                        product design and search.
+                    </p>
 
                 </div>
 
 
                 <!-- Filter Buttons -->
-                <div class="filter-buttons">
+                <div class="filter-buttons reveal" role="group" aria-label="Filter projects">
 
-                    <button
-                        class="filter-btn active"
-                        data-filter="all">
-                        All
-                    </button>
-
-                    <button
-                        class="filter-btn"
-                        data-filter="web">
-                        Web
-                    </button>
-
-                    <button
-                        class="filter-btn"
-                        data-filter="uiux">
-                        UI/UX
-                    </button>
-
-                    <button
-                        class="filter-btn"
-                        data-filter="seo">
-                        SEO
-                    </button>
+                    <button class="filter-btn active" data-filter="all" aria-pressed="true">All</button>
+                    <button class="filter-btn" data-filter="web" aria-pressed="false">Web</button>
+                    <button class="filter-btn" data-filter="uiux" aria-pressed="false">UI/UX</button>
+                    <button class="filter-btn" data-filter="seo" aria-pressed="false">SEO</button>
 
                 </div>
 
@@ -459,60 +618,177 @@
                 <!-- Projects -->
                 <div class="portfolio-grid">
 
-                    <article
-                        class="project-card"
-                        data-category="web">
-
-                        <div class="project-image project-one"></div>
-
-                        <div class="project-info">
-                            <span>WEB DEVELOPMENT</span>
-                            <h3>Business Website</h3>
+                    <article class="project-card reveal" data-category="web">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80"
+                                 alt="Analytics dashboard on a laptop" loading="lazy">
                         </div>
-
+                        <div class="project-info">
+                            <div>
+                                <span>Web Development</span>
+                                <h3>Business Website</h3>
+                            </div>
+                            <div class="project-arrow"><svg class="icon"><use href="#i-arrow-up-right"/></svg></div>
+                        </div>
                     </article>
 
-
-                    <article
-                        class="project-card"
-                        data-category="uiux">
-
-                        <div class="project-image project-two"></div>
-
-                        <div class="project-info">
-                            <span>UI/UX DESIGN</span>
-                            <h3>Mobile App Design</h3>
+                    <article class="project-card reveal" data-category="uiux">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1558655146-d09347e92766?auto=format&fit=crop&w=900&q=80"
+                                 alt="Mobile app interface sketches" loading="lazy">
                         </div>
-
+                        <div class="project-info">
+                            <div>
+                                <span>UI/UX Design</span>
+                                <h3>Mobile App Design</h3>
+                            </div>
+                            <div class="project-arrow"><svg class="icon"><use href="#i-arrow-up-right"/></svg></div>
+                        </div>
                     </article>
 
-
-                    <article
-                        class="project-card"
-                        data-category="seo">
-
-                        <div class="project-image project-three"></div>
-
-                        <div class="project-info">
-                            <span>SEO</span>
-                            <h3>SEO Campaign</h3>
+                    <article class="project-card reveal" data-category="seo">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1432888622747-4eb9a8efeb07?auto=format&fit=crop&w=900&q=80"
+                                 alt="Laptop on a desk showing search results" loading="lazy">
                         </div>
-
+                        <div class="project-info">
+                            <div>
+                                <span>SEO</span>
+                                <h3>SEO Campaign</h3>
+                            </div>
+                            <div class="project-arrow"><svg class="icon"><use href="#i-arrow-up-right"/></svg></div>
+                        </div>
                     </article>
 
-
-                    <article
-                        class="project-card"
-                        data-category="web">
-
-                        <div class="project-image project-four"></div>
-
-                        <div class="project-info">
-                            <span>WEB DEVELOPMENT</span>
-                            <h3>Landing Page</h3>
+                    <article class="project-card reveal" data-category="web">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1553877522-43269d4ea984?auto=format&fit=crop&w=900&q=80"
+                                 alt="Team planning a landing page" loading="lazy">
                         </div>
-
+                        <div class="project-info">
+                            <div>
+                                <span>Web Development</span>
+                                <h3>Landing Page</h3>
+                            </div>
+                            <div class="project-arrow"><svg class="icon"><use href="#i-arrow-up-right"/></svg></div>
+                        </div>
                     </article>
+
+                    <article class="project-card reveal" data-category="uiux">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=900&q=80"
+                                 alt="Designer working on a brand system" loading="lazy">
+                        </div>
+                        <div class="project-info">
+                            <div>
+                                <span>UI/UX Design</span>
+                                <h3>SaaS Dashboard</h3>
+                            </div>
+                            <div class="project-arrow"><svg class="icon"><use href="#i-arrow-up-right"/></svg></div>
+                        </div>
+                    </article>
+
+                    <article class="project-card reveal" data-category="seo">
+                        <div class="project-image">
+                            <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80"
+                                 alt="Charts showing traffic growth" loading="lazy">
+                        </div>
+                        <div class="project-info">
+                            <div>
+                                <span>SEO</span>
+                                <h3>E-commerce Growth</h3>
+                            </div>
+                            <div class="project-arrow"><svg class="icon"><use href="#i-arrow-up-right"/></svg></div>
+                        </div>
+                    </article>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= TESTIMONIALS ================= -->
+        <section class="testimonials section">
+
+            <div class="container">
+
+                <div class="section-heading center">
+
+                    <p class="section-label reveal">Testimonials</p>
+
+                    <h2 class="reveal">
+                        What Our <span class="gradient-text">Clients Say</span>
+                    </h2>
+
+                </div>
+
+
+                <div class="testimonial-grid">
+
+                    <figure class="testimonial reveal">
+                        <div class="stars" aria-label="5 out of 5 stars">
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                        </div>
+                        <blockquote>
+                            "Nexa rebuilt our website from the ground up. It's faster,
+                            looks fantastic and our enquiries doubled within two months."
+                        </blockquote>
+                        <figcaption>
+                            <span class="t-avatar" style="--c:#2563eb">AK</span>
+                            <div>
+                                <strong>Ayesha Khan</strong>
+                                <small>Founder, Lumina Studio</small>
+                            </div>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="testimonial reveal">
+                        <div class="stars" aria-label="5 out of 5 stars">
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                        </div>
+                        <blockquote>
+                            "The design team understood our users better than we did.
+                            The new app flow cut our onboarding drop-off in half."
+                        </blockquote>
+                        <figcaption>
+                            <span class="t-avatar" style="--c:#7c3aed">SR</span>
+                            <div>
+                                <strong>Sara Rehman</strong>
+                                <small>Product Lead, Quantix</small>
+                            </div>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="testimonial reveal">
+                        <div class="stars" aria-label="5 out of 5 stars">
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                            <svg class="icon"><use href="#i-star"/></svg>
+                        </div>
+                        <blockquote>
+                            "Clear communication, on-time delivery and real results.
+                            Our organic traffic has grown every single month since."
+                        </blockquote>
+                        <figcaption>
+                            <span class="t-avatar" style="--c:#0891b2">MJ</span>
+                            <div>
+                                <strong>Michael James</strong>
+                                <small>Marketing Director, Vertex</small>
+                            </div>
+                        </figcaption>
+                    </figure>
 
                 </div>
 
@@ -530,58 +806,43 @@
 
                     <div class="contact-info">
 
-                        <p class="section-label">
-                            GET IN TOUCH
-                        </p>
+                        <p class="section-label reveal">Get In Touch</p>
 
-                        <h2>
+                        <h2 class="reveal">
                             Let's Build Something
-                            <span>Great Together</span>
+                            <span class="gradient-text">Great Together</span>
                         </h2>
 
-                        <p>
+                        <p class="reveal">
                             Have a project in mind? Send us a message
-                            and our team will get back to you.
+                            and our team will get back to you within one business day.
                         </p>
 
 
-                        <div class="contact-item">
+                        <div class="contact-list reveal">
 
-                            <div class="contact-icon">
-                                @
-                            </div>
+                            <a class="contact-item" href="mailto:hello@nexadigital.com">
+                                <div class="contact-icon"><svg class="icon"><use href="#i-mail"/></svg></div>
+                                <div>
+                                    <small>Email</small>
+                                    <p>hello@nexadigital.com</p>
+                                </div>
+                            </a>
 
-                            <div>
-                                <small>Email</small>
-                                <p>hello@nexadigital.com</p>
-                            </div>
+                            <a class="contact-item" href="tel:+923001234567">
+                                <div class="contact-icon"><svg class="icon"><use href="#i-phone"/></svg></div>
+                                <div>
+                                    <small>Phone</small>
+                                    <p>+92 300 1234567</p>
+                                </div>
+                            </a>
 
-                        </div>
-
-
-                        <div class="contact-item">
-
-                            <div class="contact-icon">
-                                ☎
-                            </div>
-
-                            <div>
-                                <small>Phone</small>
-                                <p>+92 300 1234567</p>
-                            </div>
-
-                        </div>
-
-
-                        <div class="contact-item">
-
-                            <div class="contact-icon">
-                                📍
-                            </div>
-
-                            <div>
-                                <small>Location</small>
-                                <p>Lahore, Pakistan</p>
+                            <div class="contact-item">
+                                <div class="contact-icon"><svg class="icon"><use href="#i-pin"/></svg></div>
+                                <div>
+                                    <small>Location</small>
+                                    <p>Lahore, Pakistan</p>
+                                </div>
                             </div>
 
                         </div>
@@ -590,105 +851,72 @@
 
 
                     <!-- Contact Form -->
-                    <div class="contact-form-container">
+                    <div class="contact-form-container reveal">
 
                         <form id="contactForm" novalidate>
 
                             <div class="form-row">
 
                                 <div class="form-group">
-
-                                    <label for="name">
-                                        Name
-                                    </label>
-
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        placeholder="Your name">
-
-                                    <small
-                                        class="error"
-                                        id="nameError">
-                                    </small>
-
+                                    <label for="name">Name</label>
+                                    <input type="text" id="name" placeholder="Your name" autocomplete="name" aria-describedby="nameError">
+                                    <small class="error" id="nameError" aria-live="polite"></small>
                                 </div>
-
 
                                 <div class="form-group">
-
-                                    <label for="email">
-                                        Email
-                                    </label>
-
-                                    <input
-                                        type="email"
-                                        id="email"
-                                        placeholder="your@email.com">
-
-                                    <small
-                                        class="error"
-                                        id="emailError">
-                                    </small>
-
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" placeholder="your@email.com" autocomplete="email" aria-describedby="emailError">
+                                    <small class="error" id="emailError" aria-live="polite"></small>
                                 </div>
 
                             </div>
 
-
                             <div class="form-group">
-
-                                <label for="subject">
-                                    Subject
-                                </label>
-
-                                <input
-                                    type="text"
-                                    id="subject"
-                                    placeholder="Project subject">
-
-                                <small
-                                    class="error"
-                                    id="subjectError">
-                                </small>
-
+                                <label for="subject">Subject</label>
+                                <input type="text" id="subject" placeholder="Project subject" aria-describedby="subjectError">
+                                <small class="error" id="subjectError" aria-live="polite"></small>
                             </div>
 
-
                             <div class="form-group">
-
-                                <label for="message">
-                                    Message
-                                </label>
-
-                                <textarea
-                                    id="message"
-                                    rows="6"
-                                    placeholder="Tell us about your project..."></textarea>
-
-                                <small
-                                    class="error"
-                                    id="messageError">
-                                </small>
-
+                                <label for="message">Message</label>
+                                <textarea id="message" rows="6" placeholder="Tell us about your project..." aria-describedby="messageError"></textarea>
+                                <small class="error" id="messageError" aria-live="polite"></small>
                             </div>
 
-
-                            <button
-                                type="submit"
-                                class="btn btn-primary submit-btn">
-                                Send Message
+                            <button type="submit" class="btn btn-primary btn-lg submit-btn">
+                                <span class="btn-label">Send Message</span>
+                                <svg class="icon"><use href="#i-arrow"/></svg>
                             </button>
 
-
-                            <p
-                                class="success-message"
-                                id="successMessage">
-                            </p>
+                            <p class="success-message" id="successMessage" role="status" aria-live="polite"></p>
 
                         </form>
 
                     </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= CTA ================= -->
+        <section class="cta-section">
+
+            <div class="container">
+
+                <div class="cta-box reveal">
+
+                    <div>
+                        <h2>Ready to grow your business online?</h2>
+                        <p>Book a free 30-minute strategy call with our team today.</p>
+                    </div>
+
+                    <a href="#contact" class="btn btn-light btn-lg">
+                        Start Your Project
+                        <svg class="icon"><use href="#i-arrow"/></svg>
+                    </a>
 
                 </div>
 
@@ -704,10 +932,11 @@
 
         <div class="container footer-grid">
 
-            <div>
+            <div class="footer-brand">
 
                 <a href="#home" class="logo">
-                    <span>Nexa</span> Digital
+                    <span class="logo-mark" aria-hidden="true">N</span>
+                    <span class="logo-text"><span>Nexa</span> Digital</span>
                 </a>
 
                 <p>
@@ -715,97 +944,85 @@
                     for modern businesses.
                 </p>
 
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><svg class="icon"><use href="#i-facebook"/></svg></a>
+                    <a href="#" aria-label="Instagram"><svg class="icon"><use href="#i-instagram"/></svg></a>
+                    <a href="#" aria-label="LinkedIn"><svg class="icon"><use href="#i-linkedin"/></svg></a>
+                </div>
+
             </div>
 
 
             <div>
-
                 <h3>Quick Links</h3>
-
                 <a href="#home">Home</a>
                 <a href="#about">About</a>
                 <a href="#services">Services</a>
                 <a href="#portfolio">Portfolio</a>
                 <a href="#contact">Contact</a>
-
             </div>
 
 
             <div>
-
                 <h3>Services</h3>
-
                 <a href="#services">Web Development</a>
                 <a href="#services">UI/UX Design</a>
                 <a href="#services">SEO</a>
                 <a href="#services">Digital Marketing</a>
-
             </div>
 
 
             <div>
-
-                <h3>Follow Us</h3>
-
-                <div class="social-links">
-
-                    <a href="#">Facebook</a>
-                    <a href="#">Instagram</a>
-                    <a href="#">LinkedIn</a>
-
-                </div>
-
+                <h3>Contact</h3>
+                <a href="mailto:hello@nexadigital.com">hello@nexadigital.com</a>
+                <a href="tel:+923001234567">+92 300 1234567</a>
+                <p>Lahore, Pakistan</p>
             </div>
 
         </div>
 
 
-        <div class="footer-bottom">
-
-            <p>
-                © 2026 Nexa Digital. All Rights Reserved.
-            </p>
-
+        <div class="container footer-bottom">
+            <p>© <span id="year">2026</span> Nexa Digital. All Rights Reserved.</p>
+            <p>Designed &amp; built with care.</p>
         </div>
 
     </footer>
 
 
+    <!-- Back to top -->
+    <a href="#home" class="back-to-top" id="backToTop" aria-label="Back to top">
+        <svg class="icon"><use href="#i-arrow-up"/></svg>
+    </a>
+
+
     <!-- ================= MODAL ================= -->
-    <div class="modal" id="serviceModal">
+    <div class="modal" id="serviceModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-hidden="true">
 
         <div class="modal-content">
 
-            <button
-                class="modal-close"
-                id="modalClose">
-                ×
+            <button class="modal-close" id="modalClose" aria-label="Close">
+                <svg class="icon"><use href="#i-x"/></svg>
             </button>
 
-            <div class="modal-icon" id="modalIcon">
-                &lt;/&gt;
+            <div class="modal-icon">
+                <svg class="icon"><use id="modalIcon" href="#i-code"/></svg>
             </div>
 
-            <h2 id="modalTitle">
-                Web Development
-            </h2>
+            <h2 id="modalTitle">Web Development</h2>
 
-            <p id="modalDescription">
-                We create modern responsive websites.
-            </p>
+            <p id="modalDescription">We create modern responsive websites.</p>
 
-            <button
-                class="btn btn-primary"
-                id="modalDone">
-                Got It
-            </button>
+            <ul class="modal-list" id="modalList"></ul>
+
+            <button class="btn btn-primary" id="modalDone">Got It</button>
 
         </div>
 
     </div>
 
 
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
 
 </body>
 </html>

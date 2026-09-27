@@ -1,36 +1,94 @@
 /* =========================
+   HELPERS
+========================= */
+
+const root = document.documentElement;
+
+const prefersReducedMotion =
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+
+/* =========================
+   HEADER ON SCROLL + BACK TO TOP
+========================= */
+
+const header = document.getElementById("header");
+const backToTop = document.getElementById("backToTop");
+
+function onScroll() {
+
+    const y = window.scrollY;
+
+    header.classList.toggle("scrolled", y > 20);
+    backToTop.classList.toggle("show", y > 600);
+
+}
+
+window.addEventListener("scroll", onScroll, { passive: true });
+onScroll();
+
+
+/* =========================
    MOBILE MENU
 ========================= */
 
 const menuBtn = document.getElementById("menuBtn");
 const navMenu = document.getElementById("navMenu");
 
+function setMenu(open) {
+
+    navMenu.classList.toggle("active", open);
+    menuBtn.classList.toggle("open", open);
+    menuBtn.setAttribute("aria-expanded", String(open));
+    menuBtn.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    document.body.classList.toggle("no-scroll", open);
+
+}
+
 menuBtn.addEventListener("click", () => {
-
-    navMenu.classList.toggle("active");
-
-    if (navMenu.classList.contains("active")) {
-        menuBtn.textContent = "✕";
-    } else {
-        menuBtn.textContent = "☰";
-    }
-
+    setMenu(!navMenu.classList.contains("active"));
 });
 
 
 /* Close mobile menu after clicking a link */
 
+navMenu.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => setMenu(false));
+});
+
+
+/* Close the menu if the screen grows past the mobile breakpoint */
+
+window.matchMedia("(min-width: 901px)").addEventListener("change", event => {
+    if (event.matches) setMenu(false);
+});
+
+
+/* =========================
+   ACTIVE NAV LINK
+========================= */
+
 const navLinks = document.querySelectorAll(".nav-link");
 
-navLinks.forEach(link => {
+const sectionObserver = new IntersectionObserver(entries => {
 
-    link.addEventListener("click", () => {
+    entries.forEach(entry => {
 
-        navMenu.classList.remove("active");
-        menuBtn.textContent = "☰";
+        if (!entry.isIntersecting) return;
+
+        navLinks.forEach(link => {
+            link.classList.toggle(
+                "active",
+                link.getAttribute("href") === "#" + entry.target.id
+            );
+        });
 
     });
 
+}, { rootMargin: "-45% 0px -50% 0px" });
+
+document.querySelectorAll("main section[id]").forEach(section => {
+    sectionObserver.observe(section);
 });
 
 
@@ -40,33 +98,157 @@ navLinks.forEach(link => {
 
 const themeBtn = document.getElementById("themeBtn");
 
-const savedTheme = localStorage.getItem("theme");
+function updateThemeButton() {
 
-if (savedTheme === "dark") {
+    const isDark = root.getAttribute("data-theme") === "dark";
 
-    document.body.classList.add("dark");
-    themeBtn.textContent = "☀️";
+    themeBtn.setAttribute(
+        "aria-label",
+        isDark ? "Switch to light mode" : "Switch to dark mode"
+    );
+
+}
+
+themeBtn.addEventListener("click", () => {
+
+    const next =
+        root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+
+    root.setAttribute("data-theme", next);
+
+    try {
+        localStorage.setItem("theme", next);
+    } catch (error) {
+        /* Storage unavailable (e.g. private mode) - theme still switches */
+    }
+
+    updateThemeButton();
+
+});
+
+updateThemeButton();
+
+
+/* =========================
+   SCROLL REVEAL
+========================= */
+
+const revealItems = document.querySelectorAll(".reveal");
+
+/* Stagger items that share the same parent */
+
+revealItems.forEach(item => {
+
+    const siblings =
+        [...item.parentElement.children].filter(el => el.classList.contains("reveal"));
+
+    const index = siblings.indexOf(item);
+
+    if (index > 0) {
+        item.style.setProperty("--delay", `${Math.min(index * 0.08, 0.4)}s`);
+    }
+
+});
+
+if ("IntersectionObserver" in window && !prefersReducedMotion) {
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+
+        entries.forEach(entry => {
+
+            if (entry.isIntersecting) {
+
+                const item = entry.target;
+
+                item.classList.add("visible");
+                observer.unobserve(item);
+
+                /* Hand transitions back to the element's own hover styles */
+                item.addEventListener("transitionend", function done(event) {
+                    if (event.target !== item) return;
+                    item.classList.remove("reveal", "visible");
+                    item.style.removeProperty("--delay");
+                    item.removeEventListener("transitionend", done);
+                });
+
+            }
+
+        });
+
+    }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
+
+    revealItems.forEach(item => revealObserver.observe(item));
+
+} else {
+
+    revealItems.forEach(item => item.classList.add("visible"));
 
 }
 
 
-themeBtn.addEventListener("click", () => {
+/* =========================
+   ANIMATED COUNTERS
+========================= */
 
-    document.body.classList.toggle("dark");
+const counters = document.querySelectorAll(".counter");
 
-    if (document.body.classList.contains("dark")) {
+function animateCounter(counter) {
 
-        themeBtn.textContent = "☀️";
+    const target = Number(counter.dataset.target);
 
-        localStorage.setItem("theme", "dark");
+    if (prefersReducedMotion) {
+        counter.textContent = target;
+        return;
+    }
 
-    } else {
+    const duration = 1600;
+    const start = performance.now();
 
-        themeBtn.textContent = "🌙";
+    function tick(now) {
 
-        localStorage.setItem("theme", "light");
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+
+        counter.textContent = Math.round(target * eased);
+
+        if (progress < 1) requestAnimationFrame(tick);
 
     }
+
+    requestAnimationFrame(tick);
+
+}
+
+const counterObserver = new IntersectionObserver((entries, observer) => {
+
+    entries.forEach(entry => {
+
+        if (entry.isIntersecting) {
+            animateCounter(entry.target);
+            observer.unobserve(entry.target);
+        }
+
+    });
+
+}, { threshold: 0.6 });
+
+counters.forEach(counter => counterObserver.observe(counter));
+
+
+/* =========================
+   SERVICE CARD SPOTLIGHT
+========================= */
+
+document.querySelectorAll(".service-card").forEach(card => {
+
+    card.addEventListener("pointermove", event => {
+
+        const rect = card.getBoundingClientRect();
+
+        card.style.setProperty("--mx", `${event.clientX - rect.left}px`);
+        card.style.setProperty("--my", `${event.clientY - rect.top}px`);
+
+    });
 
 });
 
@@ -82,86 +264,143 @@ const modalDone = document.getElementById("modalDone");
 const modalTitle = document.getElementById("modalTitle");
 const modalDescription = document.getElementById("modalDescription");
 const modalIcon = document.getElementById("modalIcon");
+const modalList = document.getElementById("modalList");
+
+let lastFocused = null;
 
 
 const services = {
 
     web: {
         title: "Web Development",
-        icon: "</>",
+        icon: "#i-code",
         description:
-            "We build fast, responsive and modern websites using clean HTML, CSS and JavaScript."
+            "We build fast, responsive and modern websites using clean HTML, CSS and JavaScript.",
+        features: [
+            "Responsive, mobile-first layouts",
+            "Performance and accessibility built in",
+            "Easy-to-manage content"
+        ]
     },
 
     uiux: {
         title: "UI/UX Design",
-        icon: "◈",
+        icon: "#i-pen",
         description:
-            "We design clean, intuitive and user-friendly interfaces focused on excellent user experiences."
+            "We design clean, intuitive and user-friendly interfaces focused on excellent user experiences.",
+        features: [
+            "User research and wireframes",
+            "High-fidelity interactive prototypes",
+            "Design systems that scale"
+        ]
     },
 
     seo: {
         title: "SEO",
-        icon: "SEO",
+        icon: "#i-search",
         description:
-            "We improve website visibility through keyword research, on-page optimization and SEO strategies."
+            "We improve website visibility through keyword research, on-page optimization and SEO strategies.",
+        features: [
+            "Keyword and competitor research",
+            "Technical and on-page optimization",
+            "Monthly ranking reports"
+        ]
     },
 
     marketing: {
         title: "Digital Marketing",
-        icon: "↗",
+        icon: "#i-megaphone",
         description:
-            "We create digital marketing strategies that help businesses reach their target audience."
+            "We create digital marketing strategies that help businesses reach their target audience.",
+        features: [
+            "Social media campaigns",
+            "Paid ads and targeting",
+            "Analytics and conversion tracking"
+        ]
     },
 
     software: {
         title: "Software Development",
-        icon: "{ }",
+        icon: "#i-layers",
         description:
-            "We develop custom software solutions designed around specific business requirements."
+            "We develop custom software solutions designed around specific business requirements.",
+        features: [
+            "Custom web applications",
+            "API and third-party integrations",
+            "Ongoing maintenance and support"
+        ]
     },
 
     cloud: {
         title: "Cloud Solutions",
-        icon: "☁",
+        icon: "#i-cloud",
         description:
-            "We provide scalable cloud solutions that help businesses improve reliability and efficiency."
+            "We provide scalable cloud solutions that help businesses improve reliability and efficiency.",
+        features: [
+            "Cloud migration and setup",
+            "Scalable, secure infrastructure",
+            "Monitoring and backups"
+        ]
     }
 
 };
 
 
-const learnMoreButtons =
-    document.querySelectorAll(".learn-more");
+function openModal(serviceName) {
 
+    const service = services[serviceName];
 
-learnMoreButtons.forEach(button => {
+    if (!service) return;
 
-    button.addEventListener("click", () => {
+    modalTitle.textContent = service.title;
+    modalDescription.textContent = service.description;
+    modalIcon.setAttribute("href", service.icon);
 
-        const serviceName =
-            button.getAttribute("data-service");
+    modalList.innerHTML = "";
 
-        const service =
-            services[serviceName];
+    service.features.forEach(feature => {
 
-        modalTitle.textContent = service.title;
-        modalDescription.textContent = service.description;
-        modalIcon.textContent = service.icon;
+        const item = document.createElement("li");
 
-        modal.classList.add("active");
+        item.innerHTML =
+            '<svg class="icon" aria-hidden="true"><use href="#i-check"/></svg>';
+
+        item.append(feature);
+        modalList.append(item);
 
     });
 
-});
+    lastFocused = document.activeElement;
+
+    modal.classList.add("active");
+    modal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("no-scroll");
+
+    modalClose.focus();
+
+}
 
 
 function closeModal() {
 
+    if (!modal.classList.contains("active")) return;
+
     modal.classList.remove("active");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("no-scroll");
+
+    if (lastFocused) lastFocused.focus();
 
 }
 
+
+document.querySelectorAll(".learn-more").forEach(button => {
+
+    button.addEventListener("click", () => {
+        openModal(button.dataset.service);
+    });
+
+});
 
 modalClose.addEventListener("click", closeModal);
 
@@ -179,15 +418,40 @@ modal.addEventListener("click", event => {
 });
 
 
+/* Keyboard: Escape closes overlays, Tab stays inside the modal */
+
+document.addEventListener("keydown", event => {
+
+    if (event.key === "Escape") {
+        closeModal();
+        setMenu(false);
+    }
+
+    if (event.key === "Tab" && modal.classList.contains("active")) {
+
+        const focusable = modal.querySelectorAll("button");
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+            event.preventDefault();
+            last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+            event.preventDefault();
+            first.focus();
+        }
+
+    }
+
+});
+
+
 /* =========================
    PORTFOLIO FILTER
 ========================= */
 
-const filterButtons =
-    document.querySelectorAll(".filter-btn");
-
-const projects =
-    document.querySelectorAll(".project-card");
+const filterButtons = document.querySelectorAll(".filter-btn");
+const projects = document.querySelectorAll(".project-card");
 
 
 filterButtons.forEach(button => {
@@ -196,27 +460,27 @@ filterButtons.forEach(button => {
 
         filterButtons.forEach(btn => {
             btn.classList.remove("active");
+            btn.setAttribute("aria-pressed", "false");
         });
 
         button.classList.add("active");
+        button.setAttribute("aria-pressed", "true");
 
-        const filter =
-            button.getAttribute("data-filter");
-
+        const filter = button.dataset.filter;
 
         projects.forEach(project => {
 
-            const category =
-                project.getAttribute("data-category");
+            const match =
+                filter === "all" || project.dataset.category === filter;
 
-            if (filter === "all" || category === filter) {
+            project.classList.toggle("hide", !match);
+            project.classList.remove("fade-in");
 
-                project.classList.remove("hide");
-
-            } else {
-
-                project.classList.add("hide");
-
+            if (match) {
+                /* Restart the entrance animation */
+                void project.offsetWidth;
+                project.classList.remove("reveal", "visible");
+                project.classList.add("fade-in");
             }
 
         });
@@ -230,169 +494,128 @@ filterButtons.forEach(button => {
    CONTACT FORM VALIDATION
 ========================= */
 
-const contactForm =
-    document.getElementById("contactForm");
+const contactForm = document.getElementById("contactForm");
 
-const nameInput =
-    document.getElementById("name");
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const subjectInput = document.getElementById("subject");
+const messageInput = document.getElementById("message");
 
-const emailInput =
-    document.getElementById("email");
+const successMessage = document.getElementById("successMessage");
+const submitBtn = contactForm.querySelector(".submit-btn");
+const submitLabel = submitBtn.querySelector(".btn-label");
 
-const subjectInput =
-    document.getElementById("subject");
-
-const messageInput =
-    document.getElementById("message");
-
-const successMessage =
-    document.getElementById("successMessage");
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 
-function showError(elementId, message) {
+/* Each rule returns an error message, or "" when the value is valid */
 
-    document.getElementById(elementId).textContent = message;
+const rules = {
+
+    name: value => {
+        if (value === "") return "Name is required.";
+        if (value.length < 3) return "Name must contain at least 3 characters.";
+        return "";
+    },
+
+    email: value => {
+        if (value === "") return "Email is required.";
+        if (!emailPattern.test(value)) return "Enter a valid email address.";
+        return "";
+    },
+
+    subject: value => {
+        if (value === "") return "Subject is required.";
+        return "";
+    },
+
+    message: value => {
+        if (value === "") return "Message is required.";
+        if (value.length < 10) return "Message must contain at least 10 characters.";
+        return "";
+    }
+
+};
+
+const fields = [nameInput, emailInput, subjectInput, messageInput];
+
+
+function validateField(input) {
+
+    const message = rules[input.id](input.value.trim());
+    const group = input.closest(".form-group");
+
+    document.getElementById(input.id + "Error").textContent = message;
+    group.classList.toggle("invalid", message !== "");
+    input.setAttribute("aria-invalid", String(message !== ""));
+
+    return message === "";
 
 }
 
 
-function clearErrors() {
+/* Re-check a field as the user fixes it */
 
-    document.querySelectorAll(".error")
-        .forEach(error => {
-            error.textContent = "";
-        });
+fields.forEach(input => {
 
-    successMessage.textContent = "";
+    input.addEventListener("input", () => {
 
-}
+        successMessage.textContent = "";
+
+        if (input.closest(".form-group").classList.contains("invalid")) {
+            validateField(input);
+        }
+
+    });
+
+    input.addEventListener("blur", () => {
+        if (input.value.trim() !== "") validateField(input);
+    });
+
+});
 
 
 contactForm.addEventListener("submit", event => {
 
     event.preventDefault();
 
-    clearErrors();
+    successMessage.textContent = "";
 
-    let isValid = true;
+    const results = fields.map(validateField);
+    const isValid = results.every(Boolean);
 
-
-    /* Name validation */
-
-    if (nameInput.value.trim() === "") {
-
-        showError(
-            "nameError",
-            "Name is required."
-        );
-
-        isValid = false;
-
-    } else if (nameInput.value.trim().length < 3) {
-
-        showError(
-            "nameError",
-            "Name must contain at least 3 characters."
-        );
-
-        isValid = false;
-
+    if (!isValid) {
+        fields[results.indexOf(false)].focus();
+        return;
     }
 
 
-    /* Email validation */
+    /* Successful submission (simulated send) */
 
-    const emailPattern =
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    submitBtn.classList.add("loading");
+    submitBtn.disabled = true;
+    submitLabel.textContent = "Sending...";
 
+    setTimeout(() => {
 
-    if (emailInput.value.trim() === "") {
-
-        showError(
-            "emailError",
-            "Email is required."
-        );
-
-        isValid = false;
-
-    } else if (!emailPattern.test(emailInput.value)) {
-
-        showError(
-            "emailError",
-            "Enter a valid email address."
-        );
-
-        isValid = false;
-
-    }
-
-
-    /* Subject validation */
-
-    if (subjectInput.value.trim() === "") {
-
-        showError(
-            "subjectError",
-            "Subject is required."
-        );
-
-        isValid = false;
-
-    }
-
-
-    /* Message validation */
-
-    if (messageInput.value.trim() === "") {
-
-        showError(
-            "messageError",
-            "Message is required."
-        );
-
-        isValid = false;
-
-    } else if (messageInput.value.trim().length < 10) {
-
-        showError(
-            "messageError",
-            "Message must contain at least 10 characters."
-        );
-
-        isValid = false;
-
-    }
-
-
-    /* Successful submission */
-
-    if (isValid) {
+        submitBtn.classList.remove("loading");
+        submitBtn.disabled = false;
+        submitLabel.textContent = "Send Message";
 
         successMessage.textContent =
             "✓ Your message has been submitted successfully!";
 
         contactForm.reset();
 
-    }
-    
-});
-// Dark Mode
-const themeToggle = document.getElementById("theme-toggle");
+        fields.forEach(input => input.removeAttribute("aria-invalid"));
 
-themeToggle.addEventListener("click", () => {
-    document.body.classList.toggle("dark-mode");
+    }, 900);
 
-    if (document.body.classList.contains("dark-mode")) {
-        themeToggle.textContent = "☀️";
-        localStorage.setItem("theme", "dark");
-    } else {
-        themeToggle.textContent = "🌙";
-        localStorage.setItem("theme", "light");
-    }
 });
 
-// Save theme after page refresh
-if (localStorage.getItem("theme") === "dark") {
-    document.body.classList.add("dark-mode");
-    themeToggle.textContent = "☀️";
-}
+
+/* =========================
+   FOOTER YEAR
+========================= */
+
+document.getElementById("year").textContent = new Date().getFullYear();
